@@ -11,7 +11,7 @@
 #include<queue>
 #include<string.h>
 #include<iostream>
-const int MAX_N = 200000;
+const int MAX_N = 100000;
 const int MAX_M = 50000;
 const int MAX_K = 1000;
 const bool debug = false;
@@ -19,7 +19,7 @@ const bool debug = false;
 typedef struct edge
 {
     int v;
-    int distance;		//该边的距离
+    long long distance;		//该边的距离
     long long times;	//在THD中，该边的权值(计算的次数)
     bool used;
     int next;
@@ -28,11 +28,11 @@ Edge E[2 * MAX_N + 10];
 int Len = 0;				//当前已经插入的边的条数
 int Head[MAX_N + 10];		//城市i邻接表的头指针
 int Degree[MAX_N + 10];		//城市i当前的度
-int NumOfCity[MAX_N + 10];	//城市i所代表的城市数量
+long long NumOfCity[MAX_N + 10];	//城市i所代表的城市数量
 //在图的邻接表中，插入(u,v)这条长度为k的边，有向
 long long Ans = 0;
 
-int insert(int u, int v, int k)
+int insert(int u, int v, long long k)
 {
     Len++;
     //在E[len]处插入这条边
@@ -46,7 +46,7 @@ int insert(int u, int v, int k)
     return 0;
 }
 
-int change(int u, int v, int k)
+int change(int u, int v, long long k)
 {
     int x, y;
     x = Head[u];
@@ -56,9 +56,9 @@ int change(int u, int v, int k)
     }
     
     //得到要修改的边E[x]
-    Ans -= (long long)E[x].distance * E[x].times;
+    Ans -= E[x].distance * E[x].times;
     E[x].distance = k;
-    Ans += (long long)E[x].distance * E[x].times;
+    Ans += E[x].distance * E[x].times;
     
     //修改E[x]所对应的边E[y]
     y = Head[v];
@@ -79,9 +79,9 @@ int change(int u, int v, int k)
 //---------------------------------main------------------------
 int main()
 {
-    int n, m;//n为城市数, m为操作数
-    scanf("%d%d", &n, &m);
-    
+    long long n
+    int m;//n为城市数, m为操作数
+    std::cin >> n >> m;
     Ans = 0;
     int i;
     for(i = 0; i < n; i++)
@@ -91,7 +91,8 @@ int main()
         NumOfCity[i] = 1;
     }
     
-    int u, v, k;
+    int u, v;
+    long long k;
     for(i = 0; i < n - 1; i++)
     {
         std::cin >> u >> v >> k;
@@ -158,7 +159,7 @@ int main()
         }
         E[x].used = true;
         E[x].times = NumOfCity[city] * (n-NumOfCity[city]);
-        Ans += (long long)E[x].distance * E[x].times;
+        Ans += E[x].distance * E[x].times;
         NumOfCity[E[x].v] += NumOfCity[city];
         
         //求y --> (v,city)在城市E[x].v的邻接表的位置
