@@ -79,7 +79,7 @@ int change(int u, int v, long long k)
 //---------------------------------main------------------------
 int main()
 {
-    long long n
+    long long n;
     int m;//n为城市数, m为操作数
     std::cin >> n >> m;
     Ans = 0;
