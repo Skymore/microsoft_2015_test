@@ -54,9 +54,9 @@ int change(int u, int v, int k)
     }
     
     //得到要修改的边E[x]
-    Ans -= E[x].distance * E[x].times;
+    Ans -= (long long)E[x].distance * E[x].times;
     E[x].distance = k;
-    Ans += E[x].distance * E[x].times;
+    Ans += (long long)E[x].distance * E[x].times;
     
     //修改E[x]所对应的边E[y]
     y = Head[v];
@@ -141,7 +141,7 @@ int main()
         
         E[x].used = true;
         E[x].times = NumOfCity[city] * (n-NumOfCity[city]);
-        Ans += E[x].times * E[x].distance;
+        Ans += (long long)E[x].distance * E[x].times;
         NumOfCity[E[x].v] += NumOfCity[city];
         
         //求y --> (v,city)在城市E[x].v的邻接表的位置
