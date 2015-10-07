@@ -1,18 +1,20 @@
-﻿/*------------------------------------------------------------*/
-/*题目：微软2015机试 Total Highway distance
-/*作者：122345615@qq.com  skymore
-/*时间：2015/9/30
-/*题目给出一个无向图，V = N, E = N-1,即一个连通的无根树
-/*	Total Hiway Distance是所有任意两个顶点间的距离之和
-/*	操作有 改变(u,v)边的距离，或者查询THD.
-/*做法是：先求出每一条边在THD中的权值（所计算的次数）即以边(u,v)为桥分开，两边结点数的乘积。先计算出一个THD,每次修改一条边就更新THD.
-/*------------------------------------------------------------*/
+﻿//------------------------------------------------------------
+//题目：微软2015机试 Total Highway distance
+//作者：122345615@qq.com  skymore
+//时间：2015/9/30
+//题目给出一个无向图，V = N, E = N-1,即一个连通的无根树
+//	Total Hiway Distance是所有任意两个顶点间的距离之和
+//	操作有 改变(u,v)边的距离，或者查询THD.
+//做法是：先求出每一条边在THD中的权值（所计算的次数）即以边(u,v)为桥分开，两边结点数的乘积。先计算出一个THD,每次修改一条边就更新THD.
+//------------------------------------------------------------
 #include<stdio.h>
 #include<queue>
 #include<string.h>
-const int MAX_N = 100000;
+#include<iostream>
+const int MAX_N = 200000;
 const int MAX_M = 50000;
 const int MAX_K = 1000;
+const bool debug = false;
 
 typedef struct edge
 {
@@ -92,7 +94,7 @@ int main()
     int u, v, k;
     for(i = 0; i < n - 1; i++)
     {
-        scanf("%d%d%d", &u, &v, &k);
+        std::cin >> u >> v >> k;
         insert(u - 1, v - 1, k);
         insert(v - 1, u - 1, k);//无向图，插入两条边
         Degree[u - 1]++;
@@ -114,9 +116,18 @@ int main()
         }
     }
     
+    if(debug)
+    {
+        printf("LIST:\n队列中共有%lu个城市，分别是", que.size());
+    }
+
     while( !que.empty() )
     {//把city这个城市剪掉(剪掉边)，合并到E[x].v中
         int city = que.front();
+        if(debug)
+        {
+            printf("---que.pop()---\n城市%d出队列\n", city+1);
+        }
         que.pop();
         if(Degree[city] != 1)
         {
@@ -131,14 +142,20 @@ int main()
         {
             x = E[x].next;
         }
-        
+        if(debug)
+        {
+            printf("---cutEdge---\n从把边(%d,%d)删掉，城市%d合并到城市%d中\n", city+1, E[x].v+1, city+1, E[x].v+1);
+        }
         Degree[city] = 0;
         Degree[E[x].v]--;
         if(Degree[E[x].v] == 1)
         {
             que.push(E[x].v);
+            if(debug)
+            {
+                printf("---que.push()---\n城市%d的度变为了1，入队列\n",E[x].v+1);
+            }
         }
-        
         E[x].used = true;
         E[x].times = NumOfCity[city] * (n-NumOfCity[city]);
         Ans += (long long)E[x].distance * E[x].times;
@@ -159,23 +176,31 @@ int main()
     char str[10];
     for(i = 0; i < m; i++)
     {
-        scanf("%s", str);
+        std::cin >> str;
         if(str[0] == 'Q')
         {
-            printf("%lld\n", Ans);
+            std::cout << Ans << std::endl;
         }
         else if (str[0] == 'E')
         {
-            scanf("%d%d%d", &u, &v, &k);
+            std::cin >> u >> v >> k;
             change(u - 1, v - 1, k);
         }
     }
     return 0;
 }
 /*test
- 3 3
- 1 2 200
- 2 3 300
+ 11 3
+ 1 2 1
+ 2 3 1
+ 2 4 1
+ 2 5 1
+ 5 6 1
+ 1 11 1
+ 1 10 1
+ 3 8 1
+ 3 9 1
+ 4 7 1
  QUERY
  EDIT 1 2 500
  QUERY
